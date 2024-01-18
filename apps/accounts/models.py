@@ -5,6 +5,7 @@ import uuid
 
 from .managers import CustomUserManager 
 
+from rest_framework_simplejwt.tokens import RefreshToken
 
 
 class User(AbstractBaseUser, PermissionsMixin):
@@ -35,5 +36,10 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 
     def tokens(self):
-        pass
+        #encodes the user id/uses it to create the token
+        refresh = RefreshToken.for_user(self)
+        return {
+            'refresh': str(refresh), 
+            'access': str(refresh.access_token)
+        }
 

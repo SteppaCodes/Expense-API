@@ -87,6 +87,13 @@ DATABASES = {
 
 AUTH_USER_MODEL = 'accounts.user'
 
+REST_FRAMEWORK = {
+    'NON_FIELD_ERROR_KEYS': 'error',
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    )
+}
+
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = config("EMAIL_HOST")
 EMAIL_PORT = config("EMAIL_PORT")
