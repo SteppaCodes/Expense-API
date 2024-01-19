@@ -90,10 +90,13 @@ DATABASES = {
 AUTH_USER_MODEL = 'accounts.user'
 
 REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 0,
     'NON_FIELD_ERROR_KEYS': 'error',
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-    )
+    ),
+
 }
 
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"

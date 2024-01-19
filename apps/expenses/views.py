@@ -5,18 +5,25 @@ from .permissions import IsOwner
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status, permissions
+from rest_framework.pagination import PageNumberPagination  
 
 from .serializers import ExpenseSerializer
 
 
-class ExpenseListCreateAPIView(APIView):
+class ExpenseListCreateAPIView(APIView, PageNumberPagination):
     serializer_class = ExpenseSerializer
     permission_classes = [permissions.IsAuthenticated]
+
     def get(self, request):
         user = self.request.user
         expenses = Expense.objects.all().filter(owner=user)
-        serializer = self.serializer_class(expenses, many=True)
-        return Response(serializer.data)
+        #set the number if objects to be returned per page
+        self.page_size = 10
+        #from the PageNumberPagination class, paginate the queyset
+        result = self.paginate_queryset(expenses, request, view=self)
+        #Serialize the paginated resukts
+        serializer = self.serializer_class(result, many=True)
+        return self.get_paginated_response(serializer.data)
     
     def post(self, request):
         user = self.request.user
