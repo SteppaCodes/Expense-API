@@ -2,9 +2,15 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import EmailMessage
 from django.urls import reverse
 import threading
+from django.contrib.auth.tokens import PasswordResetTokenGenerator
+from django.contrib.sites.shortcuts import get_current_site
+from django.utils.encoding import force_bytes
+from django.utils.http import urlsafe_base64_encode
+from django.utils.translation import gettext_lazy as _
 
 from .models import User
 
+from rest_framework.validators import ValidationError
 
 class EmailThread(threading.Thread):
     def __init__(self, email):
@@ -16,7 +22,7 @@ class EmailThread(threading.Thread):
 
     
 
-class Sendmail:
+class SendMail:
 
     @staticmethod
     def verification(request, email, *args, **Kwargs):
@@ -38,3 +44,29 @@ class Sendmail:
         message.content_subtype = "html"
 
         EmailThread(message).start()
+
+
+    @staticmethod
+    def resetpassword(request, email):
+        try:
+            user = User.objects.get(email=email)
+            subject = "Reset Password"
+            uidb64 = urlsafe_base64_encode(force_bytes(user.id))
+            token = token = PasswordResetTokenGenerator().make_token(user)
+            domain = get_current_site(request).domain
+            relative_url = reverse("password-reset-confirm", 
+                                   kwargs={'uidb64': uidb64, "token":token})
+            abs_url = f"http://{domain}{relative_url}"
+
+            message = EmailMessage(
+                subject=subject, 
+                body = f"Link to reset your password\n{abs_url}",
+                to= [user.email]
+            )
+
+            # message.content_subtype('html')
+            EmailThread(message).start()
+
+        except User.DoesNotExist:
+            raise ValidationError(_(f"User with the email {email} does not exist"))
+

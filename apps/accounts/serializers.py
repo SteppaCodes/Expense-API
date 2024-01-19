@@ -1,7 +1,12 @@
 from rest_framework import serializers
 from rest_framework.exceptions import AuthenticationFailed
 from .models import User
+
 from django.contrib.auth import authenticate
+from django.utils.http import urlsafe_base64_decode
+from django.utils.encoding import smart_str
+from django.contrib.auth.tokens import PasswordResetTokenGenerator
+from django.utils.translation import gettext_lazy as _
 
 class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(max_length=30, write_only=True)
@@ -48,3 +53,45 @@ class LoginSerializer(serializers.ModelSerializer):
             'access_token': str(tokens['access']),
             'refresh_token': str(tokens['refresh'])
         }
+
+
+class ResetPasswordRequestSerializer(serializers.ModelSerializer):
+    email = serializers.EmailField()
+
+    class Meta:
+        model = User
+        fields = ['email']
+
+class SetNewPasswordserializer(serializers.Serializer):
+    password = serializers.CharField(max_length=30, min_length=8, write_only=True)
+    confirm_password = serializers.CharField(max_length=30, min_length=8, write_only=True)
+    token = serializers.CharField(write_only=True)
+    uidb64 = serializers.CharField(write_only=True)
+    
+    class Meta:
+        fields = [
+            'password',
+            'confirm_password',
+            'token',
+            'uidb64'
+        ]
+
+        def validate(self, attrs):
+            password = attrs.get('password')
+            confirm_password = attrs.get('confirm_password')
+            uidb64 = attrs.get('uidb64')
+            token = attrs.get("token")
+            
+            try:
+                user_id = smart_str(urlsafe_base64_decode(uidb64))
+
+                user = User.objects.get(id=user_id)
+                if PasswordResetTokenGenerator().check_token(user, token):
+                    if password == confirm_password:
+                        user.set_password(password)
+                        user.save()
+                    raise AuthenticationFailed(_("Passwords do not match"))
+                raise AuthenticationFailed(_("Link is invalid or expired"))
+            except Exception as e:
+                raise AuthenticationFailed('Link is expired or invalid')
+

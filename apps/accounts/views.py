@@ -1,14 +1,17 @@
 
-from django.conf import settings
+from django.utils.http import urlsafe_base64_decode
+from django.contrib.auth.tokens import PasswordResetTokenGenerator
+from django.utils.encoding import smart_str, DjangoUnicodeDecodeError
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework_simplejwt.tokens import AccessToken
 
-from .serializers import (RegisterSerializer, LoginSerializer)
+from .serializers import (RegisterSerializer, LoginSerializer, 
+                          ResetPasswordRequestSerializer, SetNewPasswordserializer)
 from .models import User
-from .senders import Sendmail
+from .senders import SendMail
 from renderers import UserRenderer
 
 
@@ -22,7 +25,7 @@ class RegisterView(APIView):
         serializer.save()
         email = serializer.validated_data['email']
 
-        Sendmail.verification(request, email)
+        SendMail.verification(request, email)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
@@ -53,3 +56,38 @@ class LoginUserView(APIView):
         serializer.is_valid(raise_exception=True)
         return Response(serializer.data)
             
+
+class ResetPasswordRequest(APIView):
+    serializer_class = ResetPasswordRequestSerializer
+
+    def post(self, request):
+        serializer=  self.serializer_class(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            email = serializer.validated_data['email']
+            SendMail.resetpassword(request, email)
+            return Response({
+                'message':"An email containing the link to reset your password has been sent to you"
+            })
+        
+class PasswordResetConfirm(APIView):
+    def get(self, request, uidb64, token):
+        user_id = smart_str(urlsafe_base64_decode(uidb64))
+        try:
+            user = User.objects.get(id=user_id)
+            if PasswordResetTokenGenerator().check_token(user, token):
+                return Response({
+                    'success':True, 'message':'credentials are valid',
+                    'token':token, 'uidb64':uidb64
+                })
+            return Response({'message':'Token is invalid or expired'})
+        except DjangoUnicodeDecodeError:
+            return Response({'message':'User does not exist'})
+
+class SetNewPassword(APIView):
+    serializer_class = SetNewPasswordserializer
+
+    def patch(self, request):
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        
+        return Response({'success':True, 'message':"Password update successful"})
