@@ -22,7 +22,7 @@ class RegisterSerializer(serializers.ModelSerializer):
 
 class LoginSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(min_length=6)
-    password = serializers.CharField(max_length=30)
+    password = serializers.CharField(max_length=30, write_only=True)
     full_name = serializers.CharField(read_only=True)
     access_token= serializers.CharField(read_only=True)
     refresh_token= serializers.CharField(read_only=True)

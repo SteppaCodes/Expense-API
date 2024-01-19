@@ -25,7 +25,7 @@ class Sendmail:
         access_token = tokens.get('access')
         subject = 'Email Verification'
         domain = get_current_site(request).domain
-        relative_url = reverse('verify-email', kwargs={'token':access_token})
+        relative_url = reverse('verify-email',kwargs={'token':access_token})
         abs_url = f"http://{domain}{relative_url}"
         # 'access_token':str(tokens.get('access')),
         #'refresh_token':str(tokens.get('refresh'))
