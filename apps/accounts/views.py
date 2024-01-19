@@ -6,7 +6,7 @@ from rest_framework.response import Response
 from rest_framework import status
 import jwt
 
-from .serializers import RegisterSerializer
+from .serializers import (RegisterSerializer, LoginSerializer)
 from .models import User
 from .senders import Sendmail
 
@@ -44,4 +44,13 @@ class VerifyEmailView(APIView):
             return Response({
                 'error':'token is invalid'
             }, status=status.HTTP_400_BAD_REQUEST)
+
+
+class LoginUserView(APIView):
+    serializer_class = LoginSerializer
+    
+    def post(self, request):
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        return Response(serializer.data)
             
