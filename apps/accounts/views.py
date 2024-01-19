@@ -9,10 +9,12 @@ from rest_framework_simplejwt.tokens import AccessToken
 from .serializers import (RegisterSerializer, LoginSerializer)
 from .models import User
 from .senders import Sendmail
+from renderers import UserRenderer
 
 
 class RegisterView(APIView):
     serializer_class = RegisterSerializer
+    renderer_classes = [UserRenderer]
 
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
