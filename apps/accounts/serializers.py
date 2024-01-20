@@ -62,6 +62,7 @@ class ResetPasswordRequestSerializer(serializers.ModelSerializer):
         model = User
         fields = ['email']
 
+
 class SetNewPasswordserializer(serializers.Serializer):
     password = serializers.CharField(max_length=30, min_length=8, write_only=True)
     confirm_password = serializers.CharField(max_length=30, min_length=8, write_only=True)

@@ -69,6 +69,7 @@ class ResetPasswordRequest(APIView):
                 'message':"An email containing the link to reset your password has been sent to you"
             })
         
+
 class PasswordResetConfirm(APIView):
     def get(self, request, uidb64, token):
         user_id = smart_str(urlsafe_base64_decode(uidb64))
@@ -83,6 +84,7 @@ class PasswordResetConfirm(APIView):
         except DjangoUnicodeDecodeError:
             return Response({'message':'User does not exist'})
 
+
 class SetNewPassword(APIView):
     serializer_class = SetNewPasswordserializer
 
@@ -91,3 +93,4 @@ class SetNewPassword(APIView):
         serializer.is_valid(raise_exception=True)
         
         return Response({'success':True, 'message':"Password update successful"})
+    
