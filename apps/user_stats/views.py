@@ -24,7 +24,6 @@ class ExpenseSummary(APIView):
         today_date = datetime.date.today()
         ayear_ago = today_date - datetime.timedelta(days=(30*12))
         expenses = Expense.objects.filter(owner=request.user,date__gte=ayear_ago, date__lte=today_date)
-        print(expenses)
         final = {}
 
         #for each expense, return a list of category. set makes sure theres no duplicate
