@@ -32,7 +32,8 @@ DJANGO_APPS = [
 THIRD_PARTY_APPS = [
    "rest_framework",
    "drf_yasg",
-   "corsheaders"
+   "corsheaders",
+   "rest_framework_simplejwt.token_blacklist"
 ]
 
 LOCAL_APPS = [
@@ -155,8 +156,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(days=7),  
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=14),  
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),  
+    'REFRESH_TOKEN_LIFETIME': timedelta(minutes=7),  
 }
 
 CORS_ORIGIN_ALLOW_ALL = True

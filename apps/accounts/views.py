@@ -5,10 +5,10 @@ from django.utils.encoding import smart_str, DjangoUnicodeDecodeError
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status
+from rest_framework import status, permissions
 from rest_framework_simplejwt.tokens import AccessToken
 
-from .serializers import (RegisterSerializer, LoginSerializer, 
+from .serializers import (RegisterSerializer, LoginSerializer, LogoutSerializer,
                           ResetPasswordRequestSerializer, SetNewPasswordserializer)
 from .models import User
 from .senders import SendMail
@@ -94,3 +94,14 @@ class SetNewPassword(APIView):
         
         return Response({'success':True, 'message':"Password update successful"})
     
+
+class LogoutAPiView(APIView):
+    serializer_class = LogoutSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request):
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response({'success':True,'message':"Successfully logged out"})
+        
