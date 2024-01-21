@@ -9,3 +9,7 @@ urlpatterns = [
     path('api/', include('apps.user_stats.urls')),
     path('api/', include('apps.social_accounts.urls')),
 ]
+
+
+handle_404 = 'utils.views.error_404'
+handle_500 = 'utils.views.error_500'

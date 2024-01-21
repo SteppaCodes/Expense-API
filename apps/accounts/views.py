@@ -105,3 +105,4 @@ class LogoutAPiView(APIView):
         serializer.save()
         return Response({'success':True,'message':"Successfully logged out"})
         
+
