@@ -8,6 +8,7 @@ from django.utils.encoding import smart_str
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.utils.translation import gettext_lazy as _
 
+
 class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(max_length=30, write_only=True)
 
@@ -49,7 +50,7 @@ class LoginSerializer(serializers.ModelSerializer):
             raise AuthenticationFailed('Email not verified')
         tokens = user.tokens()
         return {
-            'email': email,
+            'email': user.email,
             'access_token': str(tokens['access']),
             'refresh_token': str(tokens['refresh'])
         }

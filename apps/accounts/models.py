@@ -7,6 +7,10 @@ from .managers import CustomUserManager
 
 from rest_framework_simplejwt.tokens import RefreshToken
 
+AUTH_PROVIDERS = {
+    'email':'email', 
+    'google':'google'
+}
 
 class User(AbstractBaseUser, PermissionsMixin):
     id = models.UUIDField(default=uuid.uuid4(), unique=True, primary_key=True)
@@ -21,6 +25,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     terms_agreement = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    auth_provider = models.CharField(max_length=60, default=AUTH_PROVIDERS.get('email'))
 
     objects =CustomUserManager()
 

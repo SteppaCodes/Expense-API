@@ -39,6 +39,7 @@ LOCAL_APPS = [
     'apps.accounts',
     'apps.expenses',
     'apps.user_stats',
+    'apps.social_accounts',
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -159,3 +160,7 @@ SIMPLE_JWT = {
 }
 
 CORS_ORIGIN_ALLOW_ALL = True
+
+GOOGLE_CLIENT_ID = config("GOOGLE_CLIENT_ID")
+GOOGLE_CLIENT_SECRET =config("GOOGLE_CLIENT_SECRET")
+SOCIAL_AUTH_PASSWORD = config("SOCIAL_AUTH_PASSWORD")
