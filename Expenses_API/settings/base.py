@@ -31,7 +31,7 @@ DJANGO_APPS = [
 
 THIRD_PARTY_APPS = [
    "rest_framework",
-   "drf_yasg",
+   "drf_spectacular",
    "corsheaders",
    "rest_framework_simplejwt.token_blacklist"
 ]
@@ -102,6 +102,7 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
+    'DEFAULT_SCHEMA_CLASS':'drf_spectacular.openapi.AutoSchema'
 
 }
 
@@ -166,3 +167,33 @@ CORS_ORIGIN_ALLOW_ALL = True
 GOOGLE_CLIENT_ID = config("GOOGLE_CLIENT_ID")
 GOOGLE_CLIENT_SECRET =config("GOOGLE_CLIENT_SECRET")
 SOCIAL_AUTH_PASSWORD = config("SOCIAL_AUTH_PASSWORD")
+
+
+
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "Expense API",
+    "DESCRIPTION": """
+    An expense tracker API built with django rest framework. 
+    For testing using existing account, login with the following credentials:
+
+    email: steppaapitestuser@gmail.com
+    password: testuser
+    or 
+    create your own account :)
+    """,
+    "VERSION": "1.0.0",
+    "SECURITY": [
+        {
+            "bearerAuth": [],
+        }
+    ],
+    "TAGS": [
+        {"name": "Auth", "description": "Authentication Endpoints"},
+    #     {"name": "Contacts", "description": "contacts CRUD endpoints"},
+    #     {"name": "Favourites", "description": "Favourites CRUD endpoints"},
+    #     {"name": "Groups", "description": "Groups CRUD endpoints"},
+    ],
+}
+
+
