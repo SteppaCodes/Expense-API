@@ -116,7 +116,6 @@ class ResetPasswordRequest(APIView):
         description="This endpoint sends an email containing password reset link",
         request=ResetPasswordRequestSerializer,
         responses={"200": ResetPasswordRequestSerializer},
-        
     )
     def post(self, request):
         serializer = self.serializer_class(data=request.data)

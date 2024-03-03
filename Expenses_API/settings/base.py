@@ -190,7 +190,7 @@ SPECTACULAR_SETTINGS = {
     ],
     "TAGS": [
         {"name": "Auth", "description": "Authentication Endpoints"},
-    #     {"name": "Contacts", "description": "contacts CRUD endpoints"},
+        {"name": "Expenses", "description": "Expenses CRUD endpoints"},
     #     {"name": "Favourites", "description": "Favourites CRUD endpoints"},
     #     {"name": "Groups", "description": "Groups CRUD endpoints"},
     ],
