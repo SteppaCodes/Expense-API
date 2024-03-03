@@ -3,8 +3,11 @@ import datetime
 
 from rest_framework.views import APIView
 from rest_framework import response, status
+from drf_spectacular.utils import extend_schema
 
 from apps.expenses.models import Expense
+
+tags = ["Stats"]
 
 class ExpenseSummary(APIView):
     def get_amount_for_category(self, expense_list, category):
@@ -20,6 +23,11 @@ class ExpenseSummary(APIView):
     def get_category(self, expense):
         return expense.category
 
+    @extend_schema(
+        tags=tags,
+        summary="expenses statistics",
+        description="This endpoint returns the total amount for each category",
+    )
     def get(self, request):
         today_date = datetime.date.today()
         ayear_ago = today_date - datetime.timedelta(days=(30*12))
