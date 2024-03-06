@@ -12,9 +12,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = config("SECRET_KEY")
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
 ALLOWED_HOSTS = config("ALLOWED_HOSTS").split(" ")
 
 
@@ -175,6 +172,7 @@ SPECTACULAR_SETTINGS = {
     "TAGS": [
         {"name": "Auth", "description": "Authentication Endpoints"},
         {"name": "Social Auth", "description": "Social Authentication Endpoints"},
+        {"name": "Account Settings", "description": "User Account operations"},
         {"name": "Expenses", "description": "Expenses CRUD endpoints"},
         {"name": "Stats", "description": "User Stats"},
     ],

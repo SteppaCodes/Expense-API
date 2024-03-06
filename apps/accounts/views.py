@@ -19,7 +19,7 @@ from .models import User
 from .senders import SendMail
 from renderers import UserRenderer
 
-tags = ["Auth"]
+tags =[["Auth"], ["Account Settings"]]
 
 
 class RegisterView(APIView):
@@ -27,7 +27,7 @@ class RegisterView(APIView):
     renderer_classes = [UserRenderer]
 
     @extend_schema(
-        tags=tags,
+        tags=tags[0],
         summary="Register user",
         description="Register user",
         request=RegisterSerializer,
@@ -61,7 +61,7 @@ class RegisterView(APIView):
 class VerifyEmailView(APIView):
 
     @extend_schema(
-        tags=tags,
+        tags=tags[0],
         summary="Verify User email",
         description="This endpoint verifies a user's email",
     )
@@ -85,7 +85,7 @@ class LoginUserView(APIView):
     serializer_class = LoginSerializer
 
     @extend_schema(
-        tags=tags,
+        tags=tags[0],
         summary="Login User",
         description="This endpoint authenticates a user",
         request=LoginSerializer,
@@ -111,7 +111,7 @@ class ResetPasswordRequest(APIView):
     serializer_class = ResetPasswordRequestSerializer
 
     @extend_schema(
-        tags=tags,
+        tags=tags[1],
         summary="Reset Password request",
         description="This endpoint sends an email containing password reset link",
         request=ResetPasswordRequestSerializer,
@@ -131,7 +131,7 @@ class ResetPasswordRequest(APIView):
 
 class PasswordResetConfirm(APIView):
     @extend_schema(
-        tags=tags,
+        tags=tags[1],
         summary="Confirm password reset for user",
         description="This endpoint confirms the token and encoded user id sent from the url"        
     )
@@ -157,7 +157,7 @@ class SetNewPassword(APIView):
     serializer_class = SetNewPasswordserializer
 
     @extend_schema(
-        tags=tags,
+        tags=tags[1],
         summary="Set new password",
         description="This endpoint sets the new password for a user account",
         request=SetNewPasswordserializer,
@@ -176,7 +176,7 @@ class LogoutAPiView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     @extend_schema(
-        tags=tags,
+        tags=tags[0],
         summary="Logout User",
         description="This endpoint Logs out a user",
         request=LogoutSerializer,
@@ -188,3 +188,22 @@ class LogoutAPiView(APIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response({"success": True, "message": "Successfully logged out"})
+
+
+class DeleteUserAccount(APIView):
+    @extend_schema(
+        tags=tags[1],
+        summary="Delete User",
+        description="This endpoint deletes a user's account",
+        request=LogoutSerializer,
+        responses={"200": LogoutSerializer},
+        
+    )  
+    def delete(self, request, id):
+        user = User.objects.get(id=id)
+        if user:
+            user.delete()
+            return Response({"success": True, "message": "User deleted"})
+        
+        return Response({"User not foumd"})
+        

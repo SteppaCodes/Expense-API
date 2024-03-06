@@ -10,6 +10,7 @@ from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.utils.translation import gettext_lazy as _
 
 
+
 class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(max_length=30, write_only=True)
 
@@ -44,7 +45,7 @@ class LoginSerializer(serializers.ModelSerializer):
 
         user = authenticate(email=email, password=password)
         if not user:
-            raise AuthenticationFailed('Email does not exist')
+            raise AuthenticationFailed('User does not exist')
         if not user.is_active:
             raise AuthenticationFailed('Account is inactive, please contact admin')
         if not user.is_email_verified:
