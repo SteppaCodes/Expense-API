@@ -1,0 +1,814 @@
+openapi: 3.0.3
+info:
+  title: Expense API
+  version: 1.0.0
+  description: "\n    An expense tracker API built with django rest framework. \n\
+    \    For testing using existing account, login with the following credentials:\n\
+    \n    email: steppaapitestuser@gmail.com\n    password: testuser\n    or \n  \
+    \  create your own account :)\n    "
+paths:
+  /api/delete-account/:
+    delete:
+      operationId: api_delete_account_destroy
+      description: This endpoint deletes a user's account
+      summary: Delete User
+      tags:
+      - Account Settings
+      security:
+      - jwtAuth: []
+      - bearerAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Logout'
+          description: ''
+  /api/expense-summary/:
+    get:
+      operationId: api_expense_summary_retrieve
+      description: This endpoint returns the total amount for each category
+      summary: expenses statistics
+      tags:
+      - Stats
+      security:
+      - jwtAuth: []
+      - bearerAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /api/expenses/:
+    get:
+      operationId: api_expenses_retrieve
+      description: This endpoint returns all user's expenses
+      summary: Expenses list
+      tags:
+      - Expenses
+      security:
+      - jwtAuth: []
+      - bearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Expense'
+          description: ''
+    post:
+      operationId: api_expenses_create
+      description: tThis endpoint creates a new expense
+      summary: Create expense
+      tags:
+      - Expenses
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Expense'
+            examples:
+              CreateExpenseRequestExample:
+                value:
+                  category: food
+                  amount: '10000'
+                  description: Just got some expensive food :)
+                  date: '2024-03-06'
+                summary: Create expense request example
+                description: Example request for creating an expense record
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Expense'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Expense'
+        required: true
+      security:
+      - jwtAuth: []
+      - bearerAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Expense'
+              examples:
+                CreateExpenseRequestExample:
+                  value:
+                    category: food
+                    amount: '10000'
+                    description: Just got some expensive food :)
+                    date: '2024-03-06'
+                  summary: Create expense request example
+                  description: Example request for creating an expense record
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Expense'
+          description: ''
+  /api/expenses/{id}/:
+    get:
+      operationId: api_expenses_retrieve_2
+      description: This endpoint retreives the expense details
+      summary: Expense detail
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Expenses
+      security:
+      - jwtAuth: []
+      - bearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Expense'
+          description: ''
+    put:
+      operationId: api_expenses_update
+      description: This endpoint updates expense details
+      summary: Update detail
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Expenses
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Expense'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Expense'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Expense'
+        required: true
+      security:
+      - jwtAuth: []
+      - bearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Expense'
+          description: ''
+    delete:
+      operationId: api_expenses_destroy
+      description: This endpoint deletes an expense
+      summary: Delete Expense
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Expenses
+      security:
+      - jwtAuth: []
+      - bearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Expense'
+          description: ''
+  /api/google/:
+    post:
+      operationId: api_google_create
+      description: This endpoint allows users to sign in or sign up with Google
+      summary: Sign in with google
+      tags:
+      - Social Auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GoogleSignIn'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/GoogleSignIn'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/GoogleSignIn'
+        required: true
+      security:
+      - jwtAuth: []
+      - bearerAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GoogleSignIn'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GoogleSignIn'
+          description: ''
+  /api/login/:
+    post:
+      operationId: api_login_create
+      description: This endpoint authenticates a user
+      summary: Login User
+      tags:
+      - Auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Login'
+            examples:
+              LoginUserExample:
+                value:
+                  email: steppaapitestuser@gmail.com
+                  password: testuser
+                summary: Login User example
+                description: Example request for authenticating a user
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Login'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Login'
+        required: true
+      security:
+      - jwtAuth: []
+      - bearerAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Login'
+              examples:
+                LoginUserExample:
+                  value:
+                    email: steppaapitestuser@gmail.com
+                    password: testuser
+                  summary: Login User example
+                  description: Example request for authenticating a user
+          description: ''
+  /api/logout/:
+    post:
+      operationId: api_logout_create
+      description: This endpoint Logs out a user
+      summary: Logout User
+      tags:
+      - Auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Logout'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Logout'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Logout'
+        required: true
+      security:
+      - jwtAuth: []
+      - bearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Logout'
+          description: ''
+  /api/password-reset-confirm/{uidb64}/{token}:
+    get:
+      operationId: api_password_reset_confirm_retrieve
+      description: This endpoint confirms the token and encoded user id sent from
+        the url
+      summary: Confirm password reset for user
+      parameters:
+      - in: path
+        name: token
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: uidb64
+        schema:
+          type: string
+        required: true
+      tags:
+      - Account Settings
+      security:
+      - jwtAuth: []
+      - bearerAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /api/register/:
+    post:
+      operationId: api_register_create
+      description: Register user
+      summary: Register user
+      tags:
+      - Auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Register'
+            examples:
+              RegisterUserExample:
+                value:
+                  email: testuser@mail.com
+                  password: testuser
+                  first_name: test
+                  last_nsme: user
+                summary: Register User example
+                description: Example request for registering a user
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Register'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Register'
+        required: true
+      security:
+      - jwtAuth: []
+      - bearerAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Register'
+              examples:
+                RegisterUserExample:
+                  value:
+                    email: testuser@mail.com
+                    password: testuser
+                    first_name: test
+                    last_nsme: user
+                  summary: Register User example
+                  description: Example request for registering a user
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Register'
+          description: ''
+  /api/reset-password-request/:
+    post:
+      operationId: api_reset_password_request_create
+      description: This endpoint sends an email containing password reset link
+      summary: Reset Password request
+      tags:
+      - Account Settings
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ResetPasswordRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ResetPasswordRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ResetPasswordRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      - bearerAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResetPasswordRequest'
+          description: ''
+  /api/schema:
+    get:
+      operationId: api_schema_retrieve
+      description: |-
+        OpenApi3 schema for this API. Format can be selected via content negotiation.
+
+        - YAML: application/vnd.oai.openapi
+        - JSON: application/vnd.oai.openapi+json
+      parameters:
+      - in: query
+        name: format
+        schema:
+          type: string
+          enum:
+          - json
+          - yaml
+      - in: query
+        name: lang
+        schema:
+          type: string
+          enum:
+          - af
+          - ar
+          - ar-dz
+          - ast
+          - az
+          - be
+          - bg
+          - bn
+          - br
+          - bs
+          - ca
+          - ckb
+          - cs
+          - cy
+          - da
+          - de
+          - dsb
+          - el
+          - en
+          - en-au
+          - en-gb
+          - eo
+          - es
+          - es-ar
+          - es-co
+          - es-mx
+          - es-ni
+          - es-ve
+          - et
+          - eu
+          - fa
+          - fi
+          - fr
+          - fy
+          - ga
+          - gd
+          - gl
+          - he
+          - hi
+          - hr
+          - hsb
+          - hu
+          - hy
+          - ia
+          - id
+          - ig
+          - io
+          - is
+          - it
+          - ja
+          - ka
+          - kab
+          - kk
+          - km
+          - kn
+          - ko
+          - ky
+          - lb
+          - lt
+          - lv
+          - mk
+          - ml
+          - mn
+          - mr
+          - ms
+          - my
+          - nb
+          - ne
+          - nl
+          - nn
+          - os
+          - pa
+          - pl
+          - pt
+          - pt-br
+          - ro
+          - ru
+          - sk
+          - sl
+          - sq
+          - sr
+          - sr-latn
+          - sv
+          - sw
+          - ta
+          - te
+          - tg
+          - th
+          - tk
+          - tr
+          - tt
+          - udm
+          - ug
+          - uk
+          - ur
+          - uz
+          - vi
+          - zh-hans
+          - zh-hant
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - bearerAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/vnd.oai.openapi:
+              schema:
+                type: object
+                additionalProperties: {}
+            application/yaml:
+              schema:
+                type: object
+                additionalProperties: {}
+            application/vnd.oai.openapi+json:
+              schema:
+                type: object
+                additionalProperties: {}
+            application/json:
+              schema:
+                type: object
+                additionalProperties: {}
+          description: ''
+  /api/set-new-password/:
+    patch:
+      operationId: api_set_new_password_partial_update
+      description: This endpoint sets the new password for a user account
+      summary: Set new password
+      tags:
+      - Account Settings
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedSetNewPasswordserializer'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedSetNewPasswordserializer'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedSetNewPasswordserializer'
+      security:
+      - jwtAuth: []
+      - bearerAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SetNewPasswordserializer'
+          description: ''
+  /api/token/refresh/:
+    post:
+      operationId: api_token_refresh_create
+      description: |-
+        Takes a refresh type JSON web token and returns an access type JSON web
+        token if the refresh token is valid.
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenRefresh'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TokenRefresh'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TokenRefresh'
+        required: true
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenRefresh'
+          description: ''
+  /api/verify-email/{token}:
+    get:
+      operationId: api_verify_email_retrieve
+      description: This endpoint verifies a user's email
+      summary: Verify User email
+      parameters:
+      - in: path
+        name: token
+        schema:
+          type: string
+        required: true
+      tags:
+      - Auth
+      security:
+      - jwtAuth: []
+      - bearerAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+components:
+  schemas:
+    CategoryEnum:
+      enum:
+      - food
+      - transportation
+      - entertainment
+      - rent
+      - others
+      type: string
+      description: |-
+        * `food` - Food
+        * `transportation` - Transportation
+        * `entertainment` - Entertainment
+        * `rent` - rent
+        * `others` - Others
+    Expense:
+      type: object
+      properties:
+        category:
+          $ref: '#/components/schemas/CategoryEnum'
+        amount:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,18}(?:\.\d{0,2})?$
+        description:
+          type: string
+        owner:
+          type: string
+          format: uuid
+        date:
+          type: string
+          format: date
+      required:
+      - amount
+      - category
+      - date
+      - description
+      - owner
+    GoogleSignIn:
+      type: object
+      properties:
+        access_token:
+          type: string
+          minLength: 6
+      required:
+      - access_token
+    Login:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          minLength: 6
+        full_name:
+          type: string
+          readOnly: true
+        password:
+          type: string
+          writeOnly: true
+          maxLength: 30
+        access_token:
+          type: string
+          readOnly: true
+        refresh_token:
+          type: string
+          readOnly: true
+      required:
+      - access_token
+      - email
+      - full_name
+      - password
+      - refresh_token
+    Logout:
+      type: object
+      properties:
+        refresh_token:
+          type: string
+      required:
+      - refresh_token
+    PatchedSetNewPasswordserializer:
+      type: object
+      properties:
+        password:
+          type: string
+          writeOnly: true
+          maxLength: 30
+          minLength: 8
+        confirm_password:
+          type: string
+          writeOnly: true
+          maxLength: 30
+          minLength: 8
+        token:
+          type: string
+          writeOnly: true
+        uidb64:
+          type: string
+          writeOnly: true
+    Register:
+      type: object
+      properties:
+        first_name:
+          type: string
+          maxLength: 50
+        last_name:
+          type: string
+          maxLength: 50
+        email:
+          type: string
+          format: email
+          title: Email Address
+          maxLength: 254
+        password:
+          type: string
+          writeOnly: true
+          maxLength: 30
+      required:
+      - email
+      - first_name
+      - last_name
+      - password
+    ResetPasswordRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+      required:
+      - email
+    SetNewPasswordserializer:
+      type: object
+      properties:
+        password:
+          type: string
+          writeOnly: true
+          maxLength: 30
+          minLength: 8
+        confirm_password:
+          type: string
+          writeOnly: true
+          maxLength: 30
+          minLength: 8
+        token:
+          type: string
+          writeOnly: true
+        uidb64:
+          type: string
+          writeOnly: true
+      required:
+      - confirm_password
+      - password
+      - token
+      - uidb64
+    TokenRefresh:
+      type: object
+      properties:
+        access:
+          type: string
+          readOnly: true
+        refresh:
+          type: string
+          writeOnly: true
+      required:
+      - access
+      - refresh
+  securitySchemes:
+    jwtAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+tags:
+- name: Auth
+  description: Authentication Endpoints
+- name: Social Auth
+  description: Social Authentication Endpoints
+- name: Account Settings
+  description: User Account operations
+- name: Expenses
+  description: Expenses CRUD endpoints
+- name: Stats
+  description: User Stats
