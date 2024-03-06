@@ -3,7 +3,7 @@ attrs==23.2.0
 cachetools==5.3.2
 certifi==2023.11.17
 charset-normalizer==3.3.2
-Django==5.0.1
+Django==4.2
 django-autoslug==1.9.9
 django-cors-headers==4.3.1
 djangorestframework==3.14.0
