@@ -1,6 +1,7 @@
-from django.shortcuts import render
+from django.shortcuts import redirect
 from .models import Expense
 from .permissions import IsOwner
+from django.views import View
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -112,3 +113,5 @@ class ExpenseDetailAPIView(APIView):
         expense = Expense.objects.get(id=id)
         expense.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
