@@ -19,7 +19,3 @@ urlpatterns = [
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-
-
-handle_404 = "utils.views.error_404"
-handle_500 = "utils.views.error_500"
