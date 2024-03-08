@@ -2,13 +2,14 @@ from django.shortcuts import redirect
 from .models import Expense
 from .permissions import IsOwner
 from django.views import View
+from django.db.models import Q
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.pagination import PageNumberPagination
-from drf_spectacular.utils import extend_schema, OpenApiExample
+from drf_spectacular.utils import extend_schema, OpenApiParameter, OpenApiExample
 from datetime import date
 
 from .serializers import ExpenseSerializer
@@ -27,12 +28,36 @@ class ExpenseListCreateAPIView(APIView, PageNumberPagination):
         description="This endpoint returns all user's expenses",
         request=ExpenseSerializer,
         responses={"200": ExpenseSerializer},
+
+        parameters = [
+            OpenApiParameter(
+            name="page",
+            type=int,
+            required=False,
+            description="Page number",
+        ),
+        OpenApiParameter(
+            name="query",
+            type=str,
+            required=False,
+            description="category name or expense description",
+        ),
+        ]
     )
     def get(self, request):
+
+        query = self.request.GET.get('query')
+        if query == None:
+            query = ''
+
+
         user = self.request.user
-        expenses = Expense.objects.all().filter(owner=user)
+        expenses = Expense.objects.all().filter( 
+            Q(category__icontains=query) | Q(description__icontains=query),
+            owner=user
+            )
         # set the number if objects to be returned per page
-        self.page_size = 10
+        self.page_size = 5
         # from the PageNumberPagination class, paginate the queyset
         result = self.paginate_queryset(expenses, request, view=self)
         # Serialize the paginated resukts
@@ -63,7 +88,6 @@ class ExpenseListCreateAPIView(APIView, PageNumberPagination):
     )
     def post(self, request):
         user = self.request.user
-        print(user)
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
             serializer.save(owner=user)
