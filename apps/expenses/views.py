@@ -54,7 +54,7 @@ class ExpenseListCreateAPIView(APIView, PageNumberPagination):
                 value={
                     "category": "food",
                     "amount": "10000",
-                    "description":"Just got some expensive food :)",
+                    "description": "Just got some expensive food :)",
                     "date": str(date.today()),
                 },
                 description="Example request for creating an expense record",
@@ -63,6 +63,7 @@ class ExpenseListCreateAPIView(APIView, PageNumberPagination):
     )
     def post(self, request):
         user = self.request.user
+        print(user)
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
             serializer.save(owner=user)
@@ -113,5 +114,3 @@ class ExpenseDetailAPIView(APIView):
         expense = Expense.objects.get(id=id)
         expense.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
-
-

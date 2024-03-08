@@ -48,8 +48,7 @@ class LoginSerializer(serializers.ModelSerializer):
             raise AuthenticationFailed('User does not exist')
         if not user.is_active:
             raise AuthenticationFailed('Account is inactive, please contact admin')
-        if not user.is_email_verified:
-            raise AuthenticationFailed('Email not verified')
+        
         tokens = user.tokens()
         return {
             'email': user.email,
